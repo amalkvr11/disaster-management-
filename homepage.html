@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Management Portal - Kerala</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --secondary-gradient: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
+            --success-gradient: linear-gradient(135deg, #00b894 0%, #00cec9 50%, #55a3ff 100%);
+        }
+        * { font-family: 'Poppins', sans-serif; }
+        body { 
+            background: var(--primary-gradient); 
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* Animated Background */
+        .bg-animation::before {
+            content: '';
+            position: fixed;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: floatBg 20s infinite linear;
+            z-index: -1;
+        }
+        @keyframes floatBg {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Hero Section */
+        .hero-section {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--primary-gradient);
+            opacity: 0.05;
+            z-index: -1;
+        }
+        .hero-title {
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glowText 3s ease-in-out infinite alternate;
+        }
+        @keyframes glowText {
+            from { filter: drop-shadow(0 0 10px rgba(102,126,234,0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(102,126,234,0.8)); }
+        }
+        /* Cards */
+        .feature-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border: none;
+            border-radius: 25px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 35px 70px rgba(0,0,0,0.25);
+        }
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+            margin-bottom: 20px;
+        }
+        /* Stats */
+        .stat-item {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+        /* Buttons */
+        .btn-primary-custom {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 40px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+        }
+        .btn-primary-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(102,126,234,0.6);
+        }
+        /* Emergency Alert */
+        .alert-emergency {
+            background: linear-gradient(135deg, #ff4757, #ff3838);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            animation: pulseAlert 2s infinite;
+        }
+        @keyframes pulseAlert {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem !important; }
+            .feature-card { margin-bottom: 20px; }
+        }
+    </style>
+</head>
+<body class="bg-animation">
+    <!-- Emergency Alert Banner -->
+    <div class="alert alert-emergency alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3 z-3" role="alert" style="max-width: 500px;">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>EMERGENCY HOTLINE:</strong> 1077 | <strong>Download AASHA App</strong>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="container py-5 my-5">
+        <div class="row align-items-center">
+            <div class="col-lg-7 text-center text-lg-start mb-4 mb-lg-0">
+                <h1 class="hero-title display-3 fw-bold mb-4">
+                    Disaster Management<br>
+                    <span class="text-warning">Portal Kerala</span>
+                </h1>
+                <p class="lead mb-4" style="font-size: 1.3rem; color: #495057;">
+                    Be Prepared. Be Safe. Be Ready. 
+                    <strong>Your first step towards community resilience</strong>
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-3">
+                    <a href="newVolunteer.html" class="btn btn-primary-custom btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>
+                        Become Volunteer
+                    </a>
+                    <a href="view_volunteers.php" class="btn btn-outline-light btn-lg px-4">
+                        <i class="fas fa-users me-2"></i>
+                        View Volunteers
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="hero-section p-5">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="stat-item">
+                                <div class="stat-number">1,247</div>
+                                <div class="h6 fw-bold text-white-50 mb-0">Volunteers</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-item">
+                                <div class="stat-number" style="color: #00b894;">14</div>
+                                <div class="h6 fw-bold text-white-50 mb-0">Districts</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-item">
+                                <div class="stat-number" style="color: #fdcb6e;">98%</div>
+                                <div class="h6 fw-bold text-white-50 mb-0">Active</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="container py-5">
+        <h2 class="text-center mb-5 display-5 fw-bold text-white">
+            <i class="fas fa-shield-alt text-warning me-3"></i>
+            Our Services
+        </h2>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card h-100 text-center p-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h4 class="h4 fw-bold mb-3">Volunteer Registration</h4>
+                    <p class="text-muted">Join our network of dedicated volunteers ready to serve during emergencies</p>
+                    <a href="newVolunteer.html" class="btn btn-primary-custom mt-3">Register Now</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card h-100 text-center p-4">
+                    <div class="feature-icon" style="background: var(--success-gradient);">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4 class="h4 fw-bold mb-3">Volunteer Management</h4>
+                    <p class="text-muted">Real-time dashboard to manage, track and coordinate volunteers</p>
+                    <a href="view_volunteers.php" class="btn btn-success px-4 py-2 mt-3">View Dashboard</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card h-100 text-center p-4">
+                    <div class="feature-icon" style="background: var(--secondary-gradient);">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h4 class="h4 fw-bold mb-3">Emergency Alerts</h4>
+                    <p class="text-muted">Instant notifications and updates about disaster situations</p>
+                    <a href="#" class="btn btn-warning text-dark fw-bold mt-3">Get Alerts</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card h-100 text-center p-4">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #00b894, #55a3ff);">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h4 class="h4 fw-bold mb-3">District Coverage</h4>
+                    <p class="text-muted">Complete coverage across all 14 districts of Kerala</p>
+                    <a href="#" class="btn btn-info text-white fw-bold mt-3">See Coverage</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions Footer -->
+    <section class="container-fluid py-5 bg-dark bg-opacity-90">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3 class="text-white mb-3">
+                        <i class="fas fa-phone text-danger me-2"></i>
+                        Emergency Contacts
+                    </h3>
+                    <div class="row text-white">
+                        <div class="col-sm-4 mb-3">
+                            <div class="h5 fw-bold">1077</div>
+                            <div>Disaster Helpline</div>
+                        </div>
+                        <div class="col-sm-4 mb-3">
+                            <div class="h5 fw-bold">108</div>
+                            <div>Ambulance</div>
+                        </div>
+                        <div class="col-sm-4 mb-3">
+                            <div class="h5 fw-bold">112</div>
+                            <div>Police Emergency</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <a href="newVolunteer.html" class="btn btn-primary-custom btn-lg px-5">
+                        Join Now <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
