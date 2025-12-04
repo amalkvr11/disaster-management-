@@ -54,9 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($address === '') {
         $errors[] = "Complete address is required.";
     }
-    if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if ($email === '') {
+        $errors[] = "Email is required.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email format.";
     }
+
     if (!empty($errors)) {
         echo "<h2>There were some problems:</h2>";
         echo "<ul>";
