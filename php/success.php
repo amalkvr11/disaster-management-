@@ -70,7 +70,7 @@
     <p>Thank you for joining as a volunteer.  
     Your support can make a real difference.</p>
 
-    <a href="../newVolunteer.html">Register Another</a>
+    <a href="/disaster-management-/html/newVolunteer.html">Register Another</a>
 </div>
 
 </body>

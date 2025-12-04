@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Login – K-DISASTERA</title>
+
+    <!-- Fonts & Bootstrap -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/disaster-management-/assets/img/blog/kdisasterlogo.jpg" rel="icon" />
+    <link href="/disaster-management-/assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
+
+
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #9face6 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            margin: 0;
+        }
+
+        .login-card {
+            width: 420px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(14px);
+            padding: 40px 35px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            animation: fadeIn 0.8s ease-in-out;
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-weight: 700;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: white;
+        }
+
+        .form-control {
+            background: rgba(255,255,255,0.8);
+            border: 2px solid rgba(255,255,255,0.6);
+            padding: 12px 15px;
+            border-radius: 12px;
+            transition: 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(118,75,162,0.3);
+            background: white;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            border-radius: 12px;
+            margin-top: 10px;
+            transition: 0.3s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102,126,234,0.5);
+        }
+
+        .links {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            opacity: 0.9;
+            margin: 0 8px;
+        }
+
+        .links a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card">
+    <h2>Coordinator Login</h2>
+    <p class="subtitle">Manage volunteer operations & field coordination</p>
+
+    <form action="/disaster-management-/php/auth-coordinator.php" method="POST">
+        <div class="mb-3">
+            <label class="form-label">Coordinator ID</label>
+            <input type="text" name="coordid" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn-login">Login as Coordinator</button>
+    </form>
+
+    <div class="links">
+        <a href="/disaster-management-/html/super_admin.html">Admin</a>
+        <a href="#">Data Manager</a>
+    </div>
+</div>
+
+</body>
+</html>

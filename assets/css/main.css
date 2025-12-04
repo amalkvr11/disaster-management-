@@ -1006,7 +1006,6 @@ section,
 .services .content .service-item .service-item-content p {
   font-size: 15px;
 }
-
 @media (min-width: 769px) {
   .services .content [class^=col-]:nth-child(4n+4) .service-item {
     border-right: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
@@ -2267,4 +2266,19 @@ section,
   padding-left: 5px;
   color: color-mix(in srgb, var(--default-color), transparent 60%);
   font-size: 14px;
+}
+section.services-2 .swiper-slide .service-item {
+    width: 100% !important;
+    height: 260px !important;
+    overflow: hidden !important;
+    display: block !important;
+    border-radius: 12px !important;
+}
+
+section.services-2 .swiper-slide .service-item img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    display: block !important;
 }

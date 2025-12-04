@@ -4,9 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>New Volunteer Registration | VolunteerHub</title>
+    <title>New Volunteer Registration | KDM</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/disaster-management-/assets/img/blog/kdisasterlogo.jpg" rel="icon" />
+    <link href="/disaster-management-/assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
+
     <style>
         :root {
             --primary: #4361ee;
@@ -434,13 +437,13 @@
 
     <!-- Header -->
     <div class="header">
-        <a href="volunteer.html" class="back-btn">
+        <a href="/disaster-management-/html/index.html" class="back-btn">
             <i class="fas fa-arrow-left"></i>
             Back to Portal
         </a>
         <div class="logo">
             <i class="fas fa-hands-helping"></i>
-            VolunteerHub
+            KDM VolunteerHub
         </div>
     </div>
 
@@ -462,7 +465,7 @@
         </div>
 
         <!-- Form -->
-        <form method="post" id="volunteerForm" action="php/process_volunteer.php">
+        <form method="post" id="volunteerForm" action="/disaster-management-/php/process_volunteer.php">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="name" class="form-label">
@@ -560,52 +563,36 @@
                           placeholder="Enter your complete address..." 
                           required></textarea>
             </div>
+            <div class="form-group">
+    <label for="password" class="form-label">
+        Create Password <span class="required">*</span>
+    </label>
+    <input type="password"
+           name="password"
+           id="password"
+           class="form-input"
+           placeholder="Enter a strong password"
+           required
+           minlength="6">
+    <small id="passwordStrength" style="font-weight:600;"></small>
+</div>
+
+<div class="form-group">
+    <label for="confirmPassword" class="form-label">
+        Confirm Password <span class="required">*</span>
+    </label>
+    <input type="password"
+           id="confirmPassword"
+           class="form-input"
+           placeholder="Re-enter your password"
+           required>
+    <small id="passwordMatch" style="font-weight:600;"></small>
+</div>
+
             <button type="submit" class="submit-btn" id="submitBtn">
                 <span id="btnText">Submit Registration</span>
                 <div class="loading-spinner" id="loadingSpinner" style="display: none;"></div>
             </button>
-
-            <div class="form-group">
-                <label for="phone">Phone Number *</label>
-                <input type="tel" name="phone" id="phone"
-                       placeholder="Enter 10-digit phone number" required pattern="[0-9]{10}" maxlength="10">
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email *</label>
-                <input type="email" name="email" id="email"
-                       placeholder="Enter your email address" required>
-            </div>
-
-            <div class="form-group">
-                <label for="organization">Organization (Optional)</label>
-                <input type="text" name="organization" id="organization"
-                       placeholder="Enter organization name">
-            </div>
-
-            <div class="form-group">
-                <label for="district">Area of Volunteering</label>
-                <select name="area" id="areaofvolunteer" required>
-                    <option value="Food Distribution">Food Distribution</option>
-                    <option value="Response">emergency Response</option>
-                    <option value="trivandrum">Community Support</option>
-                    <option value="malappuram">Relief Distribution</option>
-                    <option value="aalappuzha">Search And Rescue</option>
-                </select>
-            </div>
-
-
-            <div class="form-group">
-                <label for="address">Complete Address *</label>
-                <textarea name="address" id="address" placeholder="Enter your complete address..." required></textarea>
-            </div>
-
-            <div style="text-align: center;">
-                <button type="submit" class="btn2" id="submitBtn">
-                    <span id="btnText">Submit Registration</span>
-                    <span id="loadingSpinner" class="loading" style="display: none;"></span>
-                </button>
-            </div>
         </form>
 
         <div class="form-footer">
@@ -615,8 +602,6 @@
 
     <script>
         document.getElementById('volunteerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
             const btn = document.getElementById('submitBtn');
             const btnText = document.getElementById('btnText');
             const spinner = document.getElementById('loadingSpinner');
@@ -631,25 +616,6 @@
             btn.disabled = true;
             btnText.textContent = 'Processing...';
             spinner.style.display = 'inline-block';
-
-            // Simulate form submission (replace with actual fetch/AJAX call)
-            setTimeout(function() {
-                // In a real implementation, you would use fetch() to submit the form
-                // For this example, we'll simulate success after 2 seconds
-                
-                btn.disabled = false;
-                btnText.textContent = 'Submit Registration';
-                spinner.style.display = 'none';
-                
-                // Show success message
-                successMessage.style.display = 'block';
-                
-                // Reset form after 3 seconds
-                setTimeout(function() {
-                    document.getElementById('volunteerForm').reset();
-                    successMessage.style.display = 'none';
-                }, 3000);
-            }, 2000);
         });
 
         const observerOptions = {
@@ -667,6 +633,67 @@
         document.querySelectorAll('.form-group').forEach((group) => {
             observer.observe(group);
         });
+const password = document.getElementById("password");
+const passwordStrength = document.getElementById("passwordStrength");
+
+password.addEventListener("input", function () {
+
+    // Password Strength Logic (same as yours)
+    const value = password.value;
+    let strength = 0;
+
+    if (value.length >= 6) strength++;
+    if (/[A-Z]/.test(value)) strength++;
+    if (/[a-z]/.test(value)) strength++;
+    if (/[0-9]/.test(value)) strength++;
+    if (/[^A-Za-z0-9]/.test(value)) strength++;
+
+    const strengthTexts = ["Very Weak", "Weak", "Moderate", "Strong", "Very Strong"];
+    const strengthColors = ["#dc3545", "#ff6b6b", "#f4a261", "#2a9d8f", "#198754"];
+
+    passwordStrength.textContent = "Strength: " + strengthTexts[strength];
+    passwordStrength.style.color = strengthColors[strength];
+
+    // Re-check password match when user edits password
+    if (confirmPassword.value.length > 0) {
+        if (confirmPassword.value === password.value) {
+            passwordMatch.textContent = "Passwords match ✓";
+            passwordMatch.style.color = "#198754";
+        } else {
+            passwordMatch.textContent = "Passwords do not match ✗";
+            passwordMatch.style.color = "#dc3545";
+        }
+    }
+});
+
+// Password Match Validation
+const confirmPassword = document.getElementById("confirmPassword");
+const passwordMatch = document.getElementById("passwordMatch");
+
+confirmPassword.addEventListener("input", function () {
+
+    if (confirmPassword.value.length === 0) {
+        passwordMatch.textContent = "";
+        return;
+    }
+
+    if (confirmPassword.value === password.value) {
+        passwordMatch.textContent = "Passwords match ✓";
+        passwordMatch.style.color = "#198754";
+    } else {
+        passwordMatch.textContent = "Passwords do not match ✗";
+        passwordMatch.style.color = "#dc3545";
+    }
+});
+
+
+// Prevent Submit if password mismatch
+document.getElementById('volunteerForm').addEventListener("submit", function (e) {
+    if (confirmPassword.value !== password.value) {
+        e.preventDefault();
+        alert("Passwords do not match!");
+    }
+});
     </script>
 </body>
 </html>

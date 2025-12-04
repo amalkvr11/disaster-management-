@@ -12,54 +12,46 @@ if (!$conn) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name         = trim($_POST['name'] ?? '');
-    $district     = trim($_POST['district'] ?? '');
-    $phone        = trim($_POST['phone'] ?? '');
-    $email        = trim($_POST['email'] ?? '');
-    $organization = trim($_POST['organization'] ?? '');
-    $area         = trim($_POST['area'] ?? '');
-    $address      = trim($_POST['address'] ?? '');
+    $fname         = $_POST['name'];
+    $district      = $_POST['district'];
+    $phone         = $_POST['phone'];
+    $email         = $_POST['email'];
+    $organization  = $_POST['organization'];
+    $area          = $_POST['area'];
+    $address       = $_POST['address'];
+    $password      = $_POST['password'];
 
     $errors = [];
-    if ($name === '') {
-        $errors[] = "Full Name is required.";
+
+    // Required field checks
+    if ($fname === '') $errors[] = "Full Name is required.";
+    if ($district === '') $errors[] = "District is required.";
+    if (!preg_match('/^[0-9]{10}$/', $phone)) $errors[] = "Phone number must be 10 digits.";
+    if ($email === '') $errors[] = "Email is required.";
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Invalid email format.";
+    if ($area === '') $errors[] = "Area of volunteering is required.";
+    if ($address === '') $errors[] = "Complete address is required.";
+
+    // Validate allowed district
+    $allowed_districts = [
+        "kozhikode", "trivandrum", "malappuram", "alappuzha",
+        "kannur", "kottayam", "thrissur", "kasargod",
+        "wayanad", "idukki", "palakkad", "ernakulam",
+        "pathanamthitta", "kollam"
+    ];
+    if (!in_array($district, $allowed_districts, true)) {
+        $errors[] = "Invalid district selected.";
     }
 
-    if ($district === '') {
-        $errors[] = "District is required.";
-    } else {
-        $allowed_districts = [
-            "kozhikode", "trivandrum", "malappuram", "alappuzha",
-            "kannur", "kottayam", "thrissur", "kasargod",
-            "wayanad", "idukki", "palakkad", "ernakulam",
-            "pathanamthitta", "kollam"
-        ];
-        if (!in_array($district, $allowed_districts, true)) {
-            $errors[] = "Invalid district selected.";
-        }
+    // ❗ Check if email already exists
+    $check_sql = "SELECT email FROM registration WHERE email = $1 LIMIT 1";
+    $check_result = pg_query_params($conn, $check_sql, array($email));
+
+    if (pg_num_rows($check_result) > 0) {
+        $errors[] = "This email is already registered. Please use another email.";
     }
 
-    if ($phone === '') {
-        $errors[] = "Phone number is required.";
-    } else {
-        if (!preg_match('/^[0-9]{10}$/', $phone)) {
-            $errors[] = "Phone number must be a 10-digit number.";
-        }
-    }
-
-    if ($area === '') {
-        $errors[] = "Area of volunteering is required.";
-    }
-
-    if ($address === '') {
-        $errors[] = "Complete address is required.";
-    }
-    if ($email === '') {
-        $errors[] = "Email is required.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Invalid email format.";
-    }
-
+    // Show errors if any
     if (!empty($errors)) {
         echo "<h2>There were some problems:</h2>";
         echo "<ul>";
@@ -70,22 +62,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo '<p><a href="newVolunteer.html">Go back to the form</a></p>';
         exit;
     }
-    $sql = "INSERT INTO registration 
-                (fname, district, phone, email, organization, areavolunteer, address) 
-            VALUES 
-                ($1, $2, $3, $4, $5, $6, $7)";
 
-    $params = [
-        $name,
+    // Insert new volunteer
+    $sql = "INSERT INTO registration 
+                (fname, district, phone, email, organization, areavolunteer, address, password) 
+            VALUES 
+                ($1, $2, $3, $4, $5, $6, $7, $8)";
+
+    $result = pg_query_params($conn, $sql, array(
+        $fname,
         $district,
         $phone,
-        $email === '' ? null : $email,
-        $organization === '' ? null : $organization,
+        $email,
+        $organization,
         $area,
-        $address
-    ];
-
-    $result = pg_query_params($conn, $sql, $params);
+        $address,
+        $password
+    ));
 
     if ($result) {
         header("Location: success.php");

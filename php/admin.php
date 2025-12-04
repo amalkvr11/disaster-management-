@@ -1,3 +1,38 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['admin_email'])) {
+    header("Location: /disaster-management-/html/super_admin.html");
+    exit;
+}
+
+$coord_email = $_SESSION['admin_email'];
+
+$conn = pg_connect("host=localhost dbname=disastermanagement user=postgres password=venda");
+if (!$conn) {
+    die("Database connection failed: " . pg_last_error());
+}
+
+$query = "SELECT name, email, type AS role FROM administration";
+$result = pg_query($conn, $query);
+
+// For stats
+$total_admins = pg_num_rows($result);
+
+$super_admins = 0;
+$coordinators = 0;
+$data_managers = 0;
+
+$admins = [];
+
+while ($row = pg_fetch_assoc($result)) {
+    $admins[] = $row;
+
+    if ($row['role'] == 'admin' || $row['role'] == 'Super Admin') $super_admins++;
+    if ($row['role'] == 'coordinator' || $row['role'] == 'Coordinator') $coordinators++;
+    if ($row['role'] == 'data_manager' || $row['role'] == 'Data Manager') $data_managers++;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -234,6 +269,9 @@
         <button id="btnAdd" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#adminModal">
             <i class="bi bi-plus-lg me-2"></i>Add New Admin
         </button>
+        <a href="/disaster-management-/php/logout.php" class="btn btn-danger">
+            <i class="bi bi-box-arrow-right me-2"></i>Logout
+        </a>
     </header>
 
     <!-- Stats Cards -->
@@ -241,28 +279,28 @@
         <div class="col-md-3">
             <div class="stats-card text-center">
                 <i class="bi bi-people-fill display-4 text-primary mb-3"></i>
-                <h3 id="totalAdmins">2</h3>
+                <h3 id="totalAdmins"><?= $total_admins ?></h3>
                 <p class="text-muted mb-0">Total Admins</p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="stats-card text-center">
                 <i class="bi bi-star-fill display-4 text-warning mb-3"></i>
-                <h3>1</h3>
+                <h3><?= $super_admins ?></h3>
                 <p class="text-muted mb-0">Super Admins</p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="stats-card text-center">
                 <i class="bi bi-person-check-fill display-4 text-success mb-3"></i>
-                <h3>1</h3>
+                <h3><?= $coordinators ?></h3>
                 <p class="text-muted mb-0">Coordinators</p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="stats-card text-center">
                 <i class="bi bi-database-fill display-4 text-info mb-3"></i>
-                <h3>0</h3>
+                <h3><?= $data_managers ?></h3>
                 <p class="text-muted mb-0">Data Managers</p>
             </div>
         </div>
@@ -273,17 +311,64 @@
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead>
-                    <tr>
-                        <th scope="col"><i class="bi bi-hash"></i> ID</th>
-                        <th scope="col"><i class="bi bi-person"></i> Name</th>
-                        <th scope="col"><i class="bi bi-envelope"></i> Email</th>
-                        <th scope="col"><i class="bi bi-briefcase"></i> Role</th>
-                        <th scope="col" class="text-center"><i class="bi bi-gear"></i> Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="adminTableBody">
-                    <!-- Admin rows inserted by JS -->
-                </tbody>
+<tr>
+    <th>#</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Role</th>
+    <th class="text-center">Actions</th>
+</tr>
+</thead>
+
+<tbody id="adminTableBody">
+<?php $i = 1; foreach ($admins as $admin): ?>
+    <tr>
+        <th scope="row" class="fw-bold"><?= $i++ ?></th>
+
+        <td>
+            <div class="d-flex align-items-center">
+                <i class="bi bi-person-circle fs-4 text-primary me-2"></i>
+                <div>
+                    <div class="fw-semibold"><?= htmlspecialchars($admin['name']) ?></div>
+                    <small class="text-muted"><?= htmlspecialchars($admin['email']) ?></small>
+                </div>
+            </div>
+        </td>
+
+        <td><span class="badge bg-light text-dark px-3 py-2"><?= htmlspecialchars($admin['email']) ?></span></td>
+
+        <td>
+            <?php
+                $role = $admin['role'];
+                $badge = "bg-info";
+
+                if ($role == 'Admin' || $role == 'admin') $badge = "bg-danger";
+                if ($role == 'Coordinator' || $role == 'coordinator') $badge = "bg-success";
+                if ($role == 'Data Manager' || $role == 'data_manager') $badge = "bg-info";
+            ?>
+            <span class="badge fs-6 px-3 py-2 fw-semibold <?= $badge ?>">
+                <?= htmlspecialchars($role) ?>
+            </span>
+        </td>
+
+        <td class="text-center action-buttons">
+            <button class="btn btn-outline-primary btn-sm me-2 btn-edit"
+        data-name="<?= htmlspecialchars($admin['name']) ?>"
+        data-email="<?= htmlspecialchars($admin['email']) ?>"
+        data-role="<?= htmlspecialchars($admin['role']) ?>">
+    <i class="bi bi-pencil-square"></i>
+</button>
+            <a href="/disaster-management-/php/delete_admin.php?email=<?= urlencode($admin['email']) ?>"
+                onclick="return confirm('Are you sure you want to delete this admin?');"
+                    class="btn btn-outline-danger btn-sm">
+               <i class="bi bi-trash"></i>
+            </a>
+
+        </td>
+    </tr>
+<?php endforeach; ?>
+</tbody>
+
             </table>
         </div>
     </div>
@@ -292,7 +377,7 @@
 <!-- Admin Add/Edit Modal -->
 <div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
-    <form id="adminForm" class="modal-content">
+    <form id="adminForm" class="modal-content" method="POST" action="add_admin.php">
       <div class="modal-header">
         <h5 class="modal-title" id="adminModalLabel">
             <i class="bi bi-plus-circle-fill me-2"></i>Add New Admin
@@ -304,13 +389,13 @@
           <div class="row">
               <div class="col-md-6">
                   <div class="form-floating">
-                      <input type="text" class="form-control" id="adminName" placeholder="Full Name" required />
+                      <input type="text" class="form-control" name="name" id="adminName" placeholder="Full Name" required />
                       <label for="adminName">Full Name <span class="text-danger">*</span></label>
                   </div>
               </div>
               <div class="col-md-6">
                   <div class="form-floating">
-                      <input type="email" class="form-control" id="adminEmail" placeholder="Email" required />
+                      <input type="email" class="form-control" name="email" id="adminEmail" placeholder="Email" required />
                       <label for="adminEmail">Email Address <span class="text-danger">*</span></label>
                   </div>
               </div>
@@ -319,9 +404,9 @@
           <div class="row">
               <div class="col-md-6">
                   <div class="form-floating">
-                      <select class="form-select" id="adminRole" required>
+                      <select class="form-select" name="role" id="adminRole" required>
                           <option value="" disabled selected>Select role</option>
-                          <option value="Super Admin">🔐 Super Admin</option>
+                          <option value="admin">🔐 Super Admin</option>
                           <option value="Coordinator">📋 Coordinator</option>
                           <option value="Data Manager">📊 Data Manager</option>
                       </select>
@@ -330,7 +415,7 @@
               </div>
               <div class="col-md-6">
                   <div class="form-floating">
-                      <input type="password" class="form-control" id="adminPassword" placeholder="Password" minlength="6" required />
+                      <input type="password" class="form-control" name="password" id="adminPassword" placeholder="Password" minlength="6" required />
                       <label for="adminPassword">Password <span class="text-danger">*</span></label>
                   </div>
               </div>
@@ -350,13 +435,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Admin data storage (simulate DB)
-let admins = [
-    {id: 1, name: 'Dr. Rajesh Kumar', email: 'rajesh@disaster.kerala.gov.in', role: 'Super Admin', password: 'admin123'},
-    {id: 2, name: 'Mary Thomas', email: 'mary.coordinator@kerala.gov.in', role: 'Coordinator', password: 'coord456'},
-];
 
-// DOM References
 const adminTableBody = document.getElementById('adminTableBody');
 const adminModal = new bootstrap.Modal(document.getElementById('adminModal'));
 const adminForm = document.getElementById('adminForm');
@@ -369,122 +448,30 @@ const adminEmailInput = document.getElementById('adminEmail');
 const adminRoleInput = document.getElementById('adminRole');
 const adminPasswordInput = document.getElementById('adminPassword');
 
-function updateStats() {
-    totalAdminsEl.textContent = admins.length;
-    // Update other stats
-    const superAdmins = admins.filter(a => a.role === 'Super Admin').length;
-    document.querySelectorAll('h3')[1].textContent = superAdmins;
-    document.querySelectorAll('h3')[2].textContent = admins.filter(a => a.role === 'Coordinator').length;
-    document.querySelectorAll('h3')[3].textContent = admins.filter(a => a.role === 'Data Manager').length;
-}
+// Enable Edit Button
+document.querySelectorAll('.btn-edit').forEach(button => {
+    button.addEventListener('click', function () {
+        const name = this.getAttribute('data-name');
+        const email = this.getAttribute('data-email');
+        const role = this.getAttribute('data-role');
 
-function renderAdmins() {
-    adminTableBody.innerHTML = '';
-    admins.forEach((admin) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <th scope="row" class="fw-bold">${admin.id}</th>
-            <td>
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-person-circle fs-4 text-primary me-2"></i>
-                    <div>
-                        <div class="fw-semibold">${admin.name}</div>
-                        <small class="text-muted">${admin.email}</small>
-                    </div>
-                </div>
-            </td>
-            <td><span class="badge bg-light text-dark px-3 py-2">${admin.email}</span></td>
-            <td>
-                <span class="badge fs-6 px-3 py-2 fw-semibold ${
-                    admin.role === 'Super Admin' ? 'bg-danger text-white' : 
-                    admin.role === 'Coordinator' ? 'bg-success text-white' : 'bg-info text-white'
-                }">${admin.role}</span>
-            </td>
-            <td class="text-center action-buttons">
-                <button class="btn btn-outline-primary btn-sm me-2 btn-edit" data-id="${admin.id}" title="Edit Admin">
-                    <i class="bi bi-pencil-square"></i>
-                </button>
-                <button class="btn btn-outline-danger btn-sm btn-delete" data-id="${admin.id}" title="Delete Admin">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </td>
-        `;
-        adminTableBody.appendChild(tr);
+        // Fill modal values
+        adminNameInput.value = name;
+        adminEmailInput.value = email;
+        adminRoleInput.value = role;
+        adminPasswordInput.removeAttribute("required"); // Password not required for update
+        adminPasswordInput.placeholder = "Leave empty to keep current password";
+
+        adminForm.action = "/disaster-management-/php/update_admin.php";
+
+        // Change modal title & button text
+        adminModalLabel.innerHTML = `<i class="bi bi-pencil-fill me-2"></i>Edit Admin`;
+        saveAdminBtn.innerHTML = `<i class="bi bi-check-lg me-2"></i>Update Admin`;
+
+        adminModal.show();
     });
-
-    // Event listeners
-    document.querySelectorAll('.btn-edit').forEach(btn => {
-        btn.addEventListener('click', e => editAdmin(e.currentTarget.getAttribute('data-id')));
-    });
-    document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', e => deleteAdmin(e.currentTarget.getAttribute('data-id')));
-    });
-    
-    updateStats();
-}
-
-function editAdmin(id) {
-    const admin = admins.find(a => a.id == id);
-    if (!admin) return alert('Admin not found!');
-    
-    adminModalLabel.innerHTML = `<i class="bi bi-pencil-square me-2"></i>Edit Admin: ${admin.name}`;
-    adminIdInput.value = admin.id;
-    adminNameInput.value = admin.name;
-    adminEmailInput.value = admin.email;
-    adminRoleInput.value = admin.role;
-    adminPasswordInput.value = admin.password;
-    adminModal.show();
-}
-
-function resetForm() {
-    adminModalLabel.innerHTML = `<i class="bi bi-plus-circle-fill me-2"></i>Add New Admin`;
-    adminForm.reset();
-    adminIdInput.value = '';
-}
-
-document.getElementById('btnAdd').addEventListener('click', resetForm);
-
-adminForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const id = adminIdInput.value ? parseInt(adminIdInput.value) : null;
-    const name = adminNameInput.value.trim();
-    const email = adminEmailInput.value.trim().toLowerCase();
-    const role = adminRoleInput.value;
-    const password = adminPasswordInput.value;
-
-    // Validation
-    if (admins.some(a => a.email === email && a.id != id)) {
-        alert('❌ Email already exists!');
-        return;
-    }
-
-    if (id) {
-        // Update
-        const index = admins.findIndex(a => a.id === id);
-        admins[index] = { id, name, email, role, password };
-        alert('✅ Admin updated successfully!');
-    } else {
-        // Add new
-        const newId = Math.max(...admins.map(a => a.id), 0) + 1;
-        admins.push({ id: newId, name, email, role, password });
-        alert('✅ New admin added successfully!');
-    }
-    
-    adminModal.hide();
-    renderAdmins();
 });
 
-function deleteAdmin(id) {
-    if (confirm('⚠️ Are you sure you want to delete this admin? This action cannot be undone.')) {
-        admins = admins.filter(a => a.id != id);
-        alert('✅ Admin deleted successfully!');
-        renderAdmins();
-    }
-}
-
-// Initialize
-renderAdmins();
 </script>
 
 </body>
