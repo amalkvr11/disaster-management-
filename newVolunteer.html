@@ -286,7 +286,7 @@
             Something went wrong. Please try again.
         </div>
 
-        <form method="post" id="volunteerForm" action="#">
+        <form method="post" id="volunteerForm" action="php/process_volunteer.php">
             <h1>REGISTER</h1>
 
             <div class="form-group">
@@ -302,7 +302,7 @@
                     <option value="kozhikode">Kozhikode</option>
                     <option value="trivandrum">Trivandrum</option>
                     <option value="malappuram">Malappuram</option>
-                    <option value="aalappuzha">Alappuzha</option>
+                    <option value="alappuzha">Alappuzha</option>
                     <option value="kannur">Kannur</option>
                     <option value="kottayam">Kottayam</option>
                     <option value="thrissur">Thrissur</option>
@@ -310,7 +310,7 @@
                     <option value="wayanad">Wayanad</option>
                     <option value="idukki">Idukki</option>
                     <option value="palakkad">Palakkad</option>
-                    <option value="eranakulam">Ernakulam</option>
+                    <option value="ernakulam">Ernakulam</option>
                     <option value="pathanamthitta">Pathanamthitta</option>
                     <option value="kollam">Kollam</option>
                 </select>
@@ -371,8 +371,6 @@
             spinner.style.display = 'inline-block';
             btn.classList.add('submitting');
 
-            // Remove this preventDefault if you connect to a real backend
-            e.preventDefault();
             setTimeout(function() {
                 btn.disabled = false;
                 btnText.style.display = 'inline';
@@ -382,7 +380,5 @@
             }, 1500);
         });
     </script>
-
-    <!-- Database schema comment removed since there is no PHP/MySQL here -->
 </body>
 </html>
