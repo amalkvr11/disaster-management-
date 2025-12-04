@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New Volunteer Registration</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="css/main.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/w3.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            padding: 20px 0;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 15%;
+            left: 5%;
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            animation: float1 18s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 25%;
+            right: 10%;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30% 70% 30% 70%;
+            animation: float2 22s ease-in-out infinite reverse;
+            z-index: -1;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
+            50% { transform: translateY(-25px) rotate(180deg); opacity: 1; }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-15px) scale(1.15); }
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 50px 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            box-shadow:
+                0 25px 50px rgba(0,0,0,0.2),
+                0 0 0 1px rgba(255,255,255,0.3) inset;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 15px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #2c3e50;
+        }
+
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        input[type="email"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+            padding-right: 50px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn2 {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 15px 35px rgba(102, 126, 234, 0.4),
+                0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn2::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn2:hover::before {
+            left: 100%;
+        }
+
+        .btn2:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow:
+                0 25px 50px rgba(102, 126, 234, 0.5),
+                0 0 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn2:active {
+            transform: translateY(-2px) scale(1);
+        }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background: linear-gradient(145deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .error {
+            background: linear-gradient(145deg, #f44336, #da190b);
+            color: white;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                margin: 20px;
+                padding: 40px 25px;
+            }
+
+            input[type="text"],
+            input[type="tel"],
+            input[type="email"],
+            select,
+            textarea {
+                padding: 14px 18px;
+                font-size: 0.95rem;
+            }
+        }
+
+        .form-container.submitting .btn2 {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <!-- Optional message box (controlled via JS if needed) -->
+        <div class="message success" id="successMessage" style="display: none;">
+            Registration submitted successfully!
+        </div>
+        <div class="message error" id="errorMessage" style="display: none;">
+            Something went wrong. Please try again.
+        </div>
+
+        <form method="post" id="volunteerForm" action="#">
+            <h1>REGISTER</h1>
+
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" name="name" id="name"
+                       placeholder="Enter your full name" required maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label for="district">District *</label>
+                <select name="district" id="district" required>
+                    <option value="">Select District</option>
+                    <option value="kozhikode">Kozhikode</option>
+                    <option value="trivandrum">Trivandrum</option>
+                    <option value="malappuram">Malappuram</option>
+                    <option value="aalappuzha">Alappuzha</option>
+                    <option value="kannur">Kannur</option>
+                    <option value="kottayam">Kottayam</option>
+                    <option value="thrissur">Thrissur</option>
+                    <option value="kasargod">Kasargod</option>
+                    <option value="wayanad">Wayanad</option>
+                    <option value="idukki">Idukki</option>
+                    <option value="palakkad">Palakkad</option>
+                    <option value="eranakulam">Ernakulam</option>
+                    <option value="pathanamthitta">Pathanamthitta</option>
+                    <option value="kollam">Kollam</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" name="phone" id="phone"
+                       placeholder="Enter 10-digit phone number" required pattern="[0-9]{10}" maxlength="10">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email (Optional)</label>
+                <input type="email" name="email" id="email"
+                       placeholder="Enter your email address">
+            </div>
+
+            <div class="form-group">
+                <label for="organization">Organization (Optional)</label>
+                <input type="text" name="organization" id="organization"
+                       placeholder="Enter organization name">
+            </div>
+
+            <div class="form-group">
+                <label for="area">Area of Volunteering *</label>
+                <input type="text" name="area" id="area"
+                       placeholder="e.g., relief distribution, medical aid, shelter management" required maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label for="address">Complete Address *</label>
+                <textarea name="address" id="address" placeholder="Enter your complete address..." required></textarea>
+            </div>
+
+            <div style="text-align: center;">
+                <button type="submit" class="btn2" id="submitBtn">
+                    <span id="btnText">Submit Registration</span>
+                    <span id="loadingSpinner" class="loading" style="display: none;"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('volunteerForm').addEventListener('submit', function(e) {
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('loadingSpinner');
+
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            btn.classList.add('submitting');
+
+            // Remove this preventDefault if you connect to a real backend
+            e.preventDefault();
+            setTimeout(function() {
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+                btn.classList.remove('submitting');
+                document.getElementById('successMessage').style.display = 'block';
+            }, 1500);
+        });
+    </script>
+
+    <!-- Database schema comment removed since there is no PHP/MySQL here -->
+</body>
+</html>
